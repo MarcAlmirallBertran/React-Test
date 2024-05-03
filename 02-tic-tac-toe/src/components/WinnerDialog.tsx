@@ -1,6 +1,6 @@
 import { Square } from "./Square"
 
-export function WinnerDialog({ children, resetGame}: {children: any, resetGame: any}) {
+export function WinnerDialog({ children, resetGame}: {children?: string | null, resetGame: () => void}) {
   if (children === null)
     return null
 

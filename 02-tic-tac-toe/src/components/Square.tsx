@@ -1,8 +1,9 @@
-export const Square = ({ children, isSelected, updateBoard, index }: {children: string, isSelected: boolean, updateBoard: Function, index: number}) => {
-    const className = `square ${isSelected ? 'is-selected' : ''}`
+export const Square = ({ children, isSelected, updateBoard, index }: {children?: string | null, isSelected?: boolean, updateBoard?: (index: number) => void, index?: number}) => {
+    const className = `square${isSelected ? ' is-selected' : ''}`
   
     const handleClick = () => {
-      updateBoard(index)
+      if (updateBoard && index !== undefined)
+        updateBoard(index)
     }
   
     return (
