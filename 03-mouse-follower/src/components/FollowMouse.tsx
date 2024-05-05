@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 
-export const FollowMouse = () => {
-  const [enabled, setEnabled] = useState(false)
+export function FollowMouse({enabled}: {enabled: boolean}) {
   const [position, setPosition] = useState({x: 0, y: 0})
 
   useEffect(() => {
@@ -21,6 +20,17 @@ export const FollowMouse = () => {
     }
   }, [enabled])
 
+  useEffect(() => {
+    document.body.classList.toggle('no-cursor', enabled)
+
+    return () => {
+      document.body.classList.remove('no-cursor')
+    }
+  })
+
+  if (!enabled)
+    return null
+
   return(
     <>
       <div style={{
@@ -36,9 +46,6 @@ export const FollowMouse = () => {
         height: 50,
         transform: `translate(${position.x}px, ${position.y}px)`
       }}/>
-      <button onClick={() => setEnabled(!enabled)}>
-        {enabled ? 'Desactivar' : 'Activar'} seguir puntero
-      </button>
     </>
   )
 }
