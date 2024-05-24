@@ -18,9 +18,7 @@ export const Todo: React.FC<Props> = ({
         className="toggle"
         type="checkbox"
         checked={completed}
-        onChange={event =>
-          onToggleCompleteTodo({ id, completed: event.target.checked })
-        }
+        onChange={(event) => onToggleCompleteTodo({ id, completed: event.target.checked })}
       />
       <label>{text}</label>
       <button className="destroy" onClick={() => onRemoveTodo({ id })}></button>

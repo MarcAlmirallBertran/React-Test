@@ -16,12 +16,12 @@ const App: React.FC = () => {
   const [filterSelected, setFilterSelected] = useState<FilterValue>(FILTERS.ALL)
 
   const handleRemove = ({ id }: TodoId) => {
-    const newTodos = todos.filter(todo => todo.id !== id)
+    const newTodos = todos.filter((todo) => todo.id !== id)
     setTodos(newTodos)
   }
 
   const handleComplete = ({ id, completed }: TodoIdAndCompleted) => {
-    const newTodos = todos.map(todo => {
+    const newTodos = todos.map((todo) => {
       if (todo.id === id) {
         return { ...todo, completed }
       }
@@ -35,14 +35,14 @@ const App: React.FC = () => {
   }
 
   const handleRemoveCompleted = () => {
-    const newTodos = todos.filter(todo => !todo.completed)
+    const newTodos = todos.filter((todo) => !todo.completed)
     setTodos(newTodos)
   }
 
-  const activeCount = todos.filter(todo => !todo.completed).length
-  const completedCount = todos.filter(todo => todo.completed).length
+  const activeCount = todos.filter((todo) => !todo.completed).length
+  const completedCount = todos.filter((todo) => todo.completed).length
 
-  const filteredTodos = todos.filter(todo => {
+  const filteredTodos = todos.filter((todo) => {
     if (filterSelected === FILTERS.ACTIVE) return !todo.completed
 
     if (filterSelected === FILTERS.COMPLETED) return todo.completed
