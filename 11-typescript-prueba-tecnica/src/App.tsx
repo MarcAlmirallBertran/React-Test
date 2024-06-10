@@ -1,14 +1,14 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { SortBy, type User } from './types.d'
+import { useMemo, useState } from 'react'
+import { SortBy } from './types.d'
 import { UserList } from './components/UserList'
 import './App.css'
+import { useUsers } from './hooks/useUsers'
 
 function App() {
-  const [users, setUsers] = useState<User[]>([])
+  const { isFetching, isError, users, refetch, fetchNextPage, hasNextPage } = useUsers()
   const [showColors, setShowColors] = useState(false)
   const [sortByColumn, setSortByColumn] = useState<SortBy>(SortBy.NONE)
   const [filterCountry, setFilterCountry] = useState<string>('')
-  const originalUsers = useRef<User[]>([])
 
   const toggleColors = () => {
     setShowColors(!showColors)
@@ -17,18 +17,6 @@ function App() {
   const handleChangeSort = (sort: SortBy) => {
     setSortByColumn((value) => (value !== sort ? sort : SortBy.NONE))
   }
-
-  useEffect(() => {
-    fetch('https://randomuser.me/api?results=100')
-      .then((response) => response.json())
-      .then((data) => {
-        setUsers(data.results)
-        originalUsers.current = data.results
-      })
-      .catch((error) => {
-        console.error('Error:', error)
-      })
-  }, [])
 
   const filteredUsers = useMemo(() => {
     return filterCountry
@@ -59,15 +47,15 @@ function App() {
   const countryList = [...new Set(users.map((user) => user.location.country))].sort()
 
   const handleDelete = (email: string) => {
-    const updatedUsers = users.filter((user) => user.email !== email)
-    setUsers(updatedUsers)
-    if (!updatedUsers.some((user) => user.location.country === filterCountry)) {
-      setFilterCountry('')
-    }
+    // const updatedUsers = users.filter((user) => user.email !== email)
+    // setUsers(updatedUsers)
+    // if (!updatedUsers.some((user) => user.location.country === filterCountry)) {
+    //   setFilterCountry('')
+    // }
   }
 
   const handleReset = () => {
-    setUsers(originalUsers.current)
+    refetch()
   }
 
   return (
@@ -93,12 +81,19 @@ function App() {
           })}
         </select>
       </header>
-      <UserList
-        users={sortedUsers}
-        showColors={showColors}
-        deleteUser={handleDelete}
-        changeSort={handleChangeSort}
-      />
+      {users.length > 0 && (
+        <UserList
+          users={sortedUsers}
+          showColors={showColors}
+          deleteUser={handleDelete}
+          changeSort={handleChangeSort}
+        />
+      )}
+      {isFetching && <strong>Loading...</strong>}
+      {!isFetching && isError && <strong>Error loading users</strong>}
+      {hasNextPage && !isFetching && !isError && (
+        <button onClick={() => fetchNextPage()}>Load more users</button>
+      )}
     </div>
   )
 }
